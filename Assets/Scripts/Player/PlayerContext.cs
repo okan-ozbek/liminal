@@ -66,12 +66,17 @@ namespace Player
 
         public bool FallingDown()
         {
-            return rigidbody.velocity.y < 0.0f;
+            return (rigidbody.velocity.y < 0.0f);
         }
 
         public bool RisingUp()
         {
-            return rigidbody.velocity.y > 0.0f;
+            return (rigidbody.velocity.y > 0.0f);
+        }
+
+        public bool NoVerticalVelocity()
+        {
+            return (rigidbody.velocity.y == 0.0f);
         }
     }
 }

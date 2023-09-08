@@ -391,7 +391,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   runSpeed: 25
   walkSpeed: 20
-  jumpForce: 2
+  jumpForce: 4
   rigidbody: {fileID: 0}
   boxCollider: {fileID: 0}
 --- !u!54 &562825534

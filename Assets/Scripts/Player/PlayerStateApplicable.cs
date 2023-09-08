@@ -9,7 +9,7 @@
             _playerContext = playerContext;
         }
 
-        public bool Grounded => (_playerContext.Grounded());
+        public bool Grounded => (_playerContext.Grounded() || _playerContext.NoVerticalVelocity());
         
         public bool Jumping => (_playerContext.Grounded() && _playerContext.PlayerInput.PressedJump);
         
