@@ -8,7 +8,7 @@ namespace Player
         typeof(Rigidbody),
         typeof(BoxCollider)
     )]
-    public class PlayerContext : MonoBehaviour
+    public sealed class PlayerContext : MonoBehaviour
     {
         public float runSpeed;
         public float walkSpeed;

@@ -2,7 +2,7 @@
 
 namespace Player
 {
-    public class PlayerInput
+    public sealed class PlayerInput
     {
         public Vector3 MovementDirection { get; private set; }
         

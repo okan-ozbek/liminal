@@ -4,7 +4,7 @@ using Player.States;
 
 namespace Player.Factories
 {
-    public class PlayerStateFactory
+    public sealed class PlayerStateFactory
     {
         private readonly Dictionary<PlayerStates, PlayerBaseState> _playerStates;
 
