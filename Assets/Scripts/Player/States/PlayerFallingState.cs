@@ -1,4 +1,5 @@
 ﻿using Player.Factories;
+using UnityEngine;
 
 namespace Player.States
 {
@@ -8,17 +9,17 @@ namespace Player.States
 
         public override void OnEnter()
         {
-            // throw new System.NotImplementedException();
+            Debug.Log("[ENTERED] Falling state");
         }
         
         protected override void OnLeave()
         {
-            // throw new System.NotImplementedException();
+            Debug.Log("[LEAVING] Falling state");
         }
 
         protected override void CheckStateChange()
         {
-            if (playerContext.Grounded()) 
+            if (playerContext.PlayerStateApplicable.Grounded) 
             {
                 ChangeState(playerStateFactory.Grounded());
             }

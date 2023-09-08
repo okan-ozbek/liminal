@@ -22,7 +22,7 @@ namespace Player.States
 
         public virtual void OnFixedUpdate()
         {
-            // No basic implmentation..
+            // There is no base state implementation, we do this so it can be an optional field.
         }
 
         protected abstract void OnLeave();

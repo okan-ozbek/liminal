@@ -9,27 +9,27 @@ namespace Player.States
 
         public override void OnEnter()
         {
-            // throw new System.NotImplementedException();
+            Debug.Log("[ENTERED] Grounded state");
         }
 
         public override void OnFixedUpdate()
         {
-            playerContext.rigidbody.AddForce(playerContext.playerInput.MovementDirection * playerContext.Speed, ForceMode.Force);
+            playerContext.rigidbody.AddForce(playerContext.PlayerInput.MovementDirection * playerContext.Speed, ForceMode.Force);
         }
 
         protected override void OnLeave()
         {
-            // throw new System.NotImplementedException();
+            Debug.Log("[LEAVING] Grounded state");
         }
 
         protected override void CheckStateChange()
         {
-            if (playerContext.Grounded() && playerContext.playerInput.PressedJump)
+            if (playerContext.PlayerStateApplicable.Jumping)
             {   
                 ChangeState(playerStateFactory.Jumping());
             }
 
-            if (!playerContext.Grounded() && playerContext.rigidbody.velocity.y < 0.0f)
+            if (playerContext.PlayerStateApplicable.Falling)
             {
                 ChangeState(playerStateFactory.Falling());
             }
