@@ -10,7 +10,7 @@ namespace Player
     public class PlayerLocomotion : MonoBehaviour
     {
         public float movementSpeed = 7.0f;
-        public float rotationSpeed = 0.25f;
+        public float rotationSpeed = 0.3f;
         
         private InputManager _inputManager;
         
