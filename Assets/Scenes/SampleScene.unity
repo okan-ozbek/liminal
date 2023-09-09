@@ -392,6 +392,7 @@ MonoBehaviour:
   runSpeed: 25
   walkSpeed: 20
   jumpForce: 4
+  jumpCooldownTime: 0.2
   rigidbody: {fileID: 0}
   boxCollider: {fileID: 0}
 --- !u!54 &562825534
