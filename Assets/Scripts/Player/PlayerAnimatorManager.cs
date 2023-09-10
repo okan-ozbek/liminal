@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using Player.Enums;
+using Static;
 using UnityEngine;
 
 namespace Player
@@ -16,6 +16,10 @@ namespace Player
         private int _horizontal;
         private int _vertical;
         
+        public const float StartWalk = 0.0f;
+        public const float StartRun = 0.5f;
+        public const float StartSprint = 2.0f;
+        
         private void Awake()
         {
             _animator = GetComponent<Animator>();
@@ -24,45 +28,33 @@ namespace Player
             _vertical = Animator.StringToHash(AnimatorEnum.Vertical.ToString());
         }
         
-        public void UpdateAnimatorValues(float horizontalMovement, float verticalMovement)
+        public void UpdateAnimatorValues(float horizontalMovement, float verticalMovement, bool setSprintAnimation)
         {
             #region Snapping Movement
-            horizontalMovement = Snap(
-                horizontalMovement, 
-                new[] { new Vector2(0.0f, 0.55f), new Vector2(0.55f, 1.0f) }, 
-                new[] { 0.5f, 1.0f }, 
+            horizontalMovement = GeneralAnimatorManager.Snap(
+                horizontalMovement,
+                new[] { new Vector2(0.0f, 0.55f), new Vector2(0.55f, 1.0f) },
+                new[] { 0.5f, 1.0f },
                 true
-            ) ?? horizontalMovement;
-            
-            verticalMovement = Snap(verticalMovement, 
-                new[] { new Vector2(0.0f, 0.55f), new Vector2(0.55f, 1.0f) }, 
-                new[] { 0.5f, 1.0f }, 
+            );
+
+            verticalMovement = GeneralAnimatorManager.Snap(
+                verticalMovement,
+                new[] { new Vector2(0.0f, 0.55f), new Vector2(0.55f, 1.0f) },
+                new[] { 0.5f, 1.0f },
                 true
-            ) ?? verticalMovement;
+            );
             #endregion
+
+            if (setSprintAnimation)
+            {
+                verticalMovement = 2.0f;
+            }
             
             _animator.SetFloat(_horizontal, horizontalMovement, BlendTime, Time.deltaTime);
             _animator.SetFloat(_vertical, verticalMovement, BlendTime, Time.deltaTime);
         }
 
-        private static float? Snap(float floatToSnap, IList<Vector2> conditions, IReadOnlyList<float> results, bool includeNegative)
-        {
-            for (int index = 0; index < conditions.Count; index++)
-            {
-                if (floatToSnap > conditions[index].x && floatToSnap < conditions[index].y)
-                {
-                    return results[index];
-                }
-
-                if (!includeNegative) continue;
-                
-                if (floatToSnap < conditions[index].x && floatToSnap > conditions[index].y)
-                {
-                    return results[index];
-                }
-            }
-
-            return null;
-        }
+        
     }
 }

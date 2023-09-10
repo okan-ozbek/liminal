@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Static
 {
-    public class AnimatorSnippets
+    public class GeneralAnimatorManager
     {
-        public static float? Snap(float floatToSnap, IList<Vector2> conditions, IReadOnlyList<float> results, bool includeNegative)
+        public static float Snap(float floatToSnap, IList<Vector2> conditions, IReadOnlyList<float> results, bool includeNegative)
         {
             for (int index = 0; index < conditions.Count; index++)
             {
@@ -22,7 +22,7 @@ namespace Static
                 }
             }
 
-            return null;
+            return floatToSnap;
         }
     }
 }

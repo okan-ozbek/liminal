@@ -15,6 +15,8 @@ namespace Player
         private PlayerInputManager _playerInputManager;
         private PlayerLocomotion _playerLocomotion;
         private PlayerAnimatorManager _playerAnimatorManager;
+        
+        private bool SetSprintAnimation => (_playerInputManager.Sprinting && _playerInputManager.MovementAmount >= PlayerAnimatorManager.StartRun);
 
         private void Awake()
         {
@@ -26,7 +28,7 @@ namespace Player
         private void FixedUpdate()
         {
             _playerLocomotion.HandleLocomotionMovement();
-            _playerAnimatorManager.UpdateAnimatorValues(0.0f, _playerInputManager.MovementAmount);
+            _playerAnimatorManager.UpdateAnimatorValues(0.0f, _playerInputManager.MovementAmount, SetSprintAnimation);
         }
 
         private void LateUpdate()
