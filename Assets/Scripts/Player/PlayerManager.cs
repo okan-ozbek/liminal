@@ -21,8 +21,8 @@ namespace Player
         private void Awake()
         {
             _playerInputManager = GetComponent<PlayerInputManager>();
-            _playerLocomotion = GetComponent<PlayerLocomotion>();
             _playerAnimatorManager = GetComponent<PlayerAnimatorManager>();
+            _playerLocomotion = GetComponent<PlayerLocomotion>();
         }
 
         private void FixedUpdate()
