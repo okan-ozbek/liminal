@@ -1,26 +1,37 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Player
 {
     [RequireComponent(
-        typeof(InputManager),
-        typeof(PlayerLocomotion)
+        typeof(PlayerInputManager),
+        typeof(PlayerLocomotion),
+        typeof(PlayerAnimatorManager)
     )]
     public class PlayerManager : MonoBehaviour
     {
-        private InputManager _inputManager;
-        private PlayerLocomotion _playerLocomotion;
+        [SerializeField]
+        private CameraManager cameraManager;
         
+        private PlayerInputManager _playerInputManager;
+        private PlayerLocomotion _playerLocomotion;
+        private PlayerAnimatorManager _playerAnimatorManager;
+
         private void Awake()
         {
-            _inputManager = GetComponent<InputManager>();
+            _playerInputManager = GetComponent<PlayerInputManager>();
             _playerLocomotion = GetComponent<PlayerLocomotion>();
+            _playerAnimatorManager = GetComponent<PlayerAnimatorManager>();
         }
 
         private void FixedUpdate()
         {
-            _playerLocomotion.HandleAllMovement();
+            _playerLocomotion.HandleLocomotionMovement();
+            _playerAnimatorManager.UpdateAnimatorValues(0.0f, _playerInputManager.MovementAmount);
+        }
+
+        private void LateUpdate()
+        {
+            cameraManager.HandleCameraMovement();
         }
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Player
 {
     [RequireComponent(
-        typeof(InputManager),
+        typeof(PlayerInputManager),
         typeof(Rigidbody),
         typeof(CapsuleCollider)
     )]
@@ -12,7 +12,7 @@ namespace Player
         public float movementSpeed = 7.0f;
         public float rotationSpeed = 0.3f;
         
-        private InputManager _inputManager;
+        private PlayerInputManager _inputManager;
         
         private Vector3 _movementDirection;
         private Vector3 _targetDirection;
@@ -21,13 +21,13 @@ namespace Player
         
         private void Awake()
         {
-            _inputManager = GetComponent<InputManager>();
+            _inputManager = GetComponent<PlayerInputManager>();
             _rigidbody = GetComponent<Rigidbody>();
 
             if (Camera.main != null) _camera = Camera.main.transform;
         }
 
-        public void HandleAllMovement()
+        public void HandleLocomotionMovement()
         {
             HandleMovement();
             HandleRotation();
@@ -35,13 +35,9 @@ namespace Player
         
         private void HandleMovement()
         {
-            var invertedCameraPosition = _camera.transform.position * -1;
-
-            _movementDirection = new Vector3(
-                invertedCameraPosition.x * _inputManager.HorizontalMovementInput,
-                0.0f,
-                invertedCameraPosition.z * _inputManager.VerticalMovementInput
-            );
+            _movementDirection = _camera.forward * _inputManager.MovementInput.y;
+            _movementDirection += _camera.right * _inputManager.MovementInput.x;
+            _movementDirection.y = 0.0f;
             
             _movementDirection.Normalize();
             _movementDirection *= movementSpeed;
@@ -52,14 +48,10 @@ namespace Player
 
         private void HandleRotation()
         {
-            var invertedCameraPosition = _camera.transform.position * -1;
+            _targetDirection = _camera.forward * _inputManager.MovementInput.y;
+            _targetDirection += _camera.right * _inputManager.MovementInput.x;
+            _targetDirection.y = 0.0f;
 
-            _targetDirection = new Vector3(
-                invertedCameraPosition.x * _inputManager.HorizontalMovementInput,
-                0.0f,
-                invertedCameraPosition.z = _inputManager.VerticalMovementInput
-            );
-            
             _targetDirection.Normalize();
 
             if (_targetDirection == Vector3.zero)
