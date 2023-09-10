@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-namespace Static
+namespace Statics
 {
     public class GeneralAnimatorManager
     {

@@ -1,5 +1,5 @@
 using Player.Enums;
-using Static;
+using Statics;
 using UnityEngine;
 
 namespace Player
