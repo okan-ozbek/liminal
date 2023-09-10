@@ -1,3 +1,4 @@
+using Player.Enums;
 using UnityEngine;
 
 namespace Player
@@ -9,12 +10,28 @@ namespace Player
     )]
     public class PlayerLocomotion : MonoBehaviour
     {
+        private PlayerManager _playerManager;
+        private PlayerAnimatorManager _playerAnimatorManager;
+
+        [Header("Falling")]
+        public bool isGrounded;
+        public float inAirTimer;
+        public float leapingVelocity;
+        public float fallingVelocity;
+        public LayerMask environmentLayer;
+        public float raycastOffset;
+
         [Header("Movement Speeds")]
         public float walkSpeed = 1.5f;
         public float runSpeed = 5.0f;
         public float sprintSpeed = 7.0f;
         public float rotationSpeed = 0.3f;
         public float movementSpeedDebug;
+
+        [Header("Jumping")] 
+        public float jumpHeight = 3.0f;
+        public float gravityIntensity = -15.0f;
+        public bool isJumping;
         
         public float MovementSpeed => GetMovementSpeed();
 
@@ -27,6 +44,8 @@ namespace Player
         
         private void Awake()
         {
+            _playerAnimatorManager = GetComponent<PlayerAnimatorManager>();
+            _playerManager = GetComponent<PlayerManager>();
             _inputManager = GetComponent<PlayerInputManager>();
             _rigidbody = GetComponent<Rigidbody>();
 
@@ -38,6 +57,13 @@ namespace Player
 
         public void HandleLocomotionMovement()
         {
+            HandleFallingAndLanding();
+            
+            if (_playerManager.isInteracting)
+            {
+                return;
+            }
+            
             HandleMovement();
             HandleRotation();
 
@@ -46,6 +72,9 @@ namespace Player
         
         private void HandleMovement()
         {
+            if (isJumping)
+                return;
+            
             _movementDirection = _mainCamera.forward * _inputManager.MovementInput.y;
             _movementDirection += _mainCamera.right * _inputManager.MovementInput.x;
             
@@ -61,6 +90,9 @@ namespace Player
 
         private void HandleRotation()
         {
+            if (isJumping)
+                return;
+            
             _targetDirection = _mainCamera.forward * _inputManager.MovementInput.y;
             _targetDirection += _mainCamera.right * _inputManager.MovementInput.x;
             
@@ -77,6 +109,54 @@ namespace Player
             Quaternion rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed);
 
             transform.rotation = rotation;
+        }
+
+        private void HandleFallingAndLanding()
+        {
+            Vector3 raycastOrigin = transform.position;
+            raycastOrigin.y = raycastOrigin.y + raycastOffset;
+
+            if (!isGrounded && !isJumping)
+            {
+                if (!_playerManager.isInteracting)
+                {
+                    _playerAnimatorManager.PlayTargetAnimation(AnimationEnum.Falling.ToString(), true);
+                }
+
+                inAirTimer = inAirTimer + Time.deltaTime;
+                _rigidbody.AddForce(transform.forward * leapingVelocity);
+                _rigidbody.AddForce(Vector3.down * fallingVelocity * inAirTimer);
+            }
+
+            if (Physics.SphereCast(raycastOrigin, 0.2f, Vector3.down, out RaycastHit hit, 1.0f, environmentLayer))
+            {
+                if (!isGrounded && _playerManager.isInteracting)
+                {   
+                    _playerAnimatorManager.PlayTargetAnimation(AnimationEnum.Landing.ToString(), true);
+                }
+
+                inAirTimer = 0;
+                isGrounded = true;
+            }
+            else
+            {
+                isGrounded = false;
+            }
+        }
+
+        public void HandleJumping()
+        {
+            if (isGrounded)
+            {
+                _playerAnimatorManager.Animator.SetBool(AnimatorEnum.isJumping.ToString(), true);
+                _playerAnimatorManager.PlayTargetAnimation(AnimationEnum.Jumping.ToString(), true);
+
+                float jumpingVelocity = Mathf.Sqrt(-2 * gravityIntensity * jumpHeight);
+                Vector3 playerVelocity = _movementDirection;
+                playerVelocity.y = jumpingVelocity;
+
+                _rigidbody.velocity = playerVelocity;
+            }
         }
 
         private float GetMovementSpeed()

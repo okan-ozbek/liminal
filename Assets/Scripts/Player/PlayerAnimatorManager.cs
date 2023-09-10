@@ -11,7 +11,7 @@ namespace Player
     {
         private const float BlendTime = 0.1f;
         
-        private Animator _animator;
+        public Animator Animator { get; private set; }
 
         private int _horizontal;
         private int _vertical;
@@ -22,10 +22,16 @@ namespace Player
         
         private void Awake()
         {
-            _animator = GetComponent<Animator>();
+            Animator = GetComponent<Animator>();
 
             _horizontal = Animator.StringToHash(AnimatorEnum.Horizontal.ToString());
             _vertical = Animator.StringToHash(AnimatorEnum.Vertical.ToString());
+        }
+
+        public void PlayTargetAnimation(string targetAnimation, bool isInteracting)
+        {
+            Animator.SetBool(AnimatorEnum.isInteracting.ToString(), isInteracting);
+            Animator.CrossFade(targetAnimation, 0.2f);
         }
         
         public void UpdateAnimatorValues(float horizontalMovement, float verticalMovement, bool setSprintAnimation)
@@ -51,8 +57,8 @@ namespace Player
                 verticalMovement = 2.0f;
             }
             
-            _animator.SetFloat(_horizontal, horizontalMovement, BlendTime, Time.deltaTime);
-            _animator.SetFloat(_vertical, verticalMovement, BlendTime, Time.deltaTime);
+            Animator.SetFloat(_horizontal, horizontalMovement, BlendTime, Time.deltaTime);
+            Animator.SetFloat(_vertical, verticalMovement, BlendTime, Time.deltaTime);
         }
 
         

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Player.Enums;
+using UnityEngine;
 
 namespace Player
 {
@@ -9,9 +10,12 @@ namespace Player
     )]
     public class PlayerManager : MonoBehaviour
     {
+        public bool isInteracting;
+        
         [SerializeField]
         private CameraManager cameraManager;
-        
+
+        private Animator _animator;
         private PlayerInputManager _playerInputManager;
         private PlayerLocomotion _playerLocomotion;
         private PlayerAnimatorManager _playerAnimatorManager;
@@ -20,9 +24,15 @@ namespace Player
 
         private void Awake()
         {
+            _animator = GetComponent<Animator>();
             _playerInputManager = GetComponent<PlayerInputManager>();
             _playerAnimatorManager = GetComponent<PlayerAnimatorManager>();
             _playerLocomotion = GetComponent<PlayerLocomotion>();
+        }
+
+        private void Update()
+        {
+            _playerInputManager.HandleJumpingInput();
         }
 
         private void FixedUpdate()
@@ -34,6 +44,10 @@ namespace Player
         private void LateUpdate()
         {
             cameraManager.HandleCameraMovement();
+
+            isInteracting = _animator.GetBool(AnimatorEnum.isInteracting.ToString());
+            _playerLocomotion.isJumping = _animator.GetBool(AnimatorEnum.isJumping.ToString());
+            _animator.SetBool(AnimatorEnum.isGrounded.ToString(), _playerLocomotion.isGrounded);
         }
     }
 }

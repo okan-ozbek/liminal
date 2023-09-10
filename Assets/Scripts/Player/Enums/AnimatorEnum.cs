@@ -6,5 +6,8 @@ namespace Player.Enums
     {
         Horizontal,
         Vertical,
+        isJumping,
+        isGrounded,
+        isInteracting,
     }
 }
